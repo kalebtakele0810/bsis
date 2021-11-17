@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <ContactMethodType id="uuid'11E715F0-FB1C-7A9D-95C5-28F10E15F8D1'" contactMethodType="None"
+                       isDeleted="0"/>
+    <ContactMethodType id="uuid'11E715F0-FB1C-7A9D-95C5-28F10E15F8D2'" contactMethodType="Phone"
+                       isDeleted="0"/>
+    <ContactMethodType id="uuid'11E715F0-FB1C-7A9D-95C5-28F10E15F8D3'" contactMethodType="SMS"
+                       isDeleted="0"/>
+    <ContactMethodType id="uuid'11E715F0-FB1C-7A9D-95C5-28F10E15F8D4'" contactMethodType="Email"
+                       isDeleted="0"/>
+    <ContactMethodType id="uuid'11E715F0-FB1C-7A9D-95C5-28F10E15F8D5'" contactMethodType="Mail"
+                       isDeleted="0"/>
+    <ContactMethodType id="uuid'11E715F0-FB1C-7A9D-95C5-28F10E15F8D6'" contactMethodType="Do not contact"
+                       isDeleted="0"/>
+</dataset>

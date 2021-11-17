@@ -1,0 +1,17 @@
+# Package Files #
+*.war
+*.ear
+
+.DS_Store
+.classpath
+.project
+.settings/
+target/
+~/
+
+# IntelliJ #
+*.iml
+*.ipr
+*.iws
+*.idea/
+*out/

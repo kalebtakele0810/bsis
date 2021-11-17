@@ -1,0 +1,25 @@
+<databaseChangeLog logicalFilePath="./src/main/resources/liquibase/updates/79-add-fields-to-component-types.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+  <changeSet id="20161212-1422" author="lauravignoli">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <columnExists tableName="ComponentType" columnName="storageInfo"/>
+        <columnExists tableName="ComponentType" columnName="transportInfo"/>
+        <columnExists tableName="ComponentType" columnName="canBeIssued"/>
+      </not>
+    </preConditions>
+    <addColumn tableName="ComponentType">
+      <column name="storageInfo" type="text" defaultValue="NULL"/>
+      <column name="transportInfo" type="text" defaultValue="NULL"/>
+      <column name="canBeIssued" type="tinyint(1)" defaultValue="1" />
+    </addColumn>
+    <addColumn tableName="ComponentType_AUD">
+      <column name="storageInfo" type="text" />
+      <column name="transportInfo" type="text" />
+      <column name="canBeIssued" type="tinyint(1)" />
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

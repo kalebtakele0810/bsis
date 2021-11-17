@@ -1,0 +1,262 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+  <changeSet id="20170320-1146" author="timler">
+    <preConditions onFail="MARK_RAN">
+      <not><columnExists tableName="DeferralReason" columnName="createdDate" /></not>
+    </preConditions>
+    <comment>Add tracking fields to DeferralReason and DeferralReason_AUD</comment>
+    <addColumn tableName="DeferralReason">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_DeferralReason_createdBy" references="User(id)"/>
+      </column>
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_DeferralReason_lastUpdatedBy" references="User(id)"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="DeferralReason_AUD">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1" />
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1" />
+    </addColumn>
+    <!-- Add not null constraints for the User tracking columns (must be done later due to a liquibase bug) -->
+    <addNotNullConstraint tableName="DeferralReason" columnName="createdBy_id" columnDataType="BIGINT(20)" />
+    <addNotNullConstraint tableName="DeferralReason" columnName="lastUpdatedBy_id" columnDataType="BIGINT(20)" />
+  </changeSet>
+
+  <changeSet id="20170320-1153" author="timler">
+    <preConditions onFail="MARK_RAN">
+      <not><columnExists tableName="User" columnName="createdDate" /></not>
+    </preConditions>
+    <comment>Add tracking fields to User and User_AUD</comment>
+    <addColumn tableName="User">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_User_createdBy" references="User(id)"/>
+      </column>
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_User_lastUpdatedBy" references="User(id)"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="User_AUD">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1" />
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1" />
+    </addColumn>
+    <!-- Add not null constraints for the User tracking columns (must be done later due to a liquibase bug) -->
+    <addNotNullConstraint tableName="User" columnName="createdBy_id" columnDataType="BIGINT(20)" />
+    <addNotNullConstraint tableName="User" columnName="lastUpdatedBy_id" columnDataType="BIGINT(20)" />
+  </changeSet>
+
+  <changeSet id="20170320-1154" author="timler">
+    <preConditions onFail="MARK_RAN">
+      <not><columnExists tableName="AdverseEventType" columnName="createdDate" /></not>
+    </preConditions>
+    <comment>Add tracking fields to AdverseEventType and AdverseEventType_AUD</comment>
+    <addColumn tableName="AdverseEventType">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_AdverseEventType_createdBy" references="User(id)"/>
+      </column>
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_AdverseEventType_lastUpdatedBy" references="User(id)"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="AdverseEventType_AUD">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1" />
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1" />
+    </addColumn>
+    <!-- Add not null constraints for the User tracking columns (must be done later due to a liquibase bug) -->
+    <addNotNullConstraint tableName="AdverseEventType" columnName="createdBy_id" columnDataType="BIGINT(20)" />
+    <addNotNullConstraint tableName="AdverseEventType" columnName="lastUpdatedBy_id" columnDataType="BIGINT(20)" />
+  </changeSet>
+
+  <changeSet id="20170320-1155" author="timler">
+    <preConditions onFail="MARK_RAN">
+      <not><columnExists tableName="DonationType" columnName="createdDate" /></not>
+    </preConditions>
+    <comment>Add tracking fields to DonationType and DonationType_AUD</comment>
+    <addColumn tableName="DonationType">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_DonationType_createdBy" references="User(id)"/>
+      </column>
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_DonationType_lastUpdatedBy" references="User(id)"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="DonationType_AUD">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1" />
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1" />
+    </addColumn>
+    <!-- Add not null constraints for the User tracking columns (must be done later due to a liquibase bug) -->
+    <addNotNullConstraint tableName="DonationType" columnName="createdBy_id" columnDataType="BIGINT(20)" />
+    <addNotNullConstraint tableName="DonationType" columnName="lastUpdatedBy_id" columnDataType="BIGINT(20)" />
+  </changeSet>
+
+  <changeSet id="20170320-1156" author="timler">
+    <preConditions onFail="MARK_RAN">
+      <not><columnExists tableName="Location" columnName="createdDate" /></not>
+    </preConditions>
+    <comment>Add tracking fields to Location and Location_AUD</comment>
+    <addColumn tableName="Location">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_Location_createdBy" references="User(id)"/>
+      </column>
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_Location_lastUpdatedBy" references="User(id)"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="Location_AUD">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1" />
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1" />
+    </addColumn>
+    <!-- Add not null constraints for the User tracking columns (must be done later due to a liquibase bug) -->
+    <addNotNullConstraint tableName="Location" columnName="createdBy_id" columnDataType="BIGINT(20)" />
+    <addNotNullConstraint tableName="Location" columnName="lastUpdatedBy_id" columnDataType="BIGINT(20)" />
+  </changeSet>
+  
+  <changeSet id="20170320-1157" author="timler">
+    <preConditions onFail="MARK_RAN">
+      <not><columnExists tableName="PackType" columnName="createdDate" /></not>
+    </preConditions>
+    <comment>Add tracking fields to PackType and PackType_AUD</comment>
+    <addColumn tableName="PackType">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_PackType_createdBy" references="User(id)"/>
+      </column>
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_PackType_lastUpdatedBy" references="User(id)"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="PackType_AUD">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1" />
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1" />
+    </addColumn>
+    <!-- Add not null constraints for the User tracking columns (must be done later due to a liquibase bug) -->
+    <addNotNullConstraint tableName="PackType" columnName="createdBy_id" columnDataType="BIGINT(20)" />
+    <addNotNullConstraint tableName="PackType" columnName="lastUpdatedBy_id" columnDataType="BIGINT(20)" />
+  </changeSet>
+
+  <changeSet id="20170320-1158" author="timler">
+    <preConditions onFail="MARK_RAN">
+      <not><columnExists tableName="Role" columnName="createdDate" /></not>
+    </preConditions>
+    <comment>Add tracking fields to Role and Role_AUD</comment>
+    <addColumn tableName="Role">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_Role_createdBy" references="User(id)"/>
+      </column>
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_Role_lastUpdatedBy" references="User(id)"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="Role_AUD">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1" />
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1" />
+    </addColumn>
+    <!-- Add not null constraints for the User tracking columns (must be done later due to a liquibase bug) -->
+    <addNotNullConstraint tableName="Role" columnName="createdBy_id" columnDataType="BIGINT(20)" />
+    <addNotNullConstraint tableName="Role" columnName="lastUpdatedBy_id" columnDataType="BIGINT(20)" />
+  </changeSet>
+
+  <changeSet id="20170119-0901" author="jmuzinda">
+    <comment>Create GeneralConfig_AUD table</comment>
+    <createTable tableName="GeneralConfig_AUD">
+      <column name="id" type="BIGINT(20)" autoIncrement="true">
+        <constraints primaryKey="true" />
+      </column>
+      <column name="REV" type="INT(11)">      
+        <constraints primaryKey="true" />
+      </column>
+      <column name="REVTYPE" type="TINYINT(4)" />
+      <column name="name" type="VARCHAR(255)" />
+      <column name="value" type="text" />
+      <column name="description" type="text" />
+      <column name="dataType_id" type="BIGINT(20)" />
+    </createTable>
+  </changeSet>
+
+  <changeSet id="20170320-1159" author="timler">
+    <preConditions onFail="MARK_RAN">
+      <not><columnExists tableName="GeneralConfig" columnName="createdDate" /></not>
+    </preConditions>
+    <comment>Add tracking fields to GeneralConfig and GeneralConfig_AUD</comment>
+    <addColumn tableName="GeneralConfig">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_GeneralConfig_createdBy" references="User(id)"/>
+      </column>
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1">
+        <constraints foreignKeyName="fk_GeneralConfig_lastUpdatedBy" references="User(id)"/>
+      </column>
+    </addColumn>
+    <addColumn tableName="GeneralConfig_AUD">
+      <column name="createdDate" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="createdBy_id" type="BIGINT(20)" valueNumeric="1" />
+      <column name="lastUpdated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="lastUpdatedBy_id" type="BIGINT(20)" valueNumeric="1" />
+    </addColumn>
+    <!-- Add not null constraints for the User tracking columns (must be done later due to a liquibase bug) -->
+    <addNotNullConstraint tableName="GeneralConfig" columnName="createdBy_id" columnDataType="BIGINT(20)" />
+    <addNotNullConstraint tableName="GeneralConfig" columnName="lastUpdatedBy_id" columnDataType="BIGINT(20)" />
+  </changeSet>
+    
+</databaseChangeLog>

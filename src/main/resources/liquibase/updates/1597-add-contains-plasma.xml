@@ -1,0 +1,22 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+    logicalFilePath="./src/main/resources/liquibase/updates/1597-add-contains-plasma.xml">
+
+    <changeSet id="20161212-1406" author="micnice">
+      <preConditions onFail="MARK_RAN">
+        <not>
+          <columnExists tableName="ComponentType" columnName="containsPlasma" />
+        </not>
+      </preConditions>
+      <addColumn tableName="ComponentType">
+        <column name="containsPlasma" type="TINYINT(1)" defaultValue="1">
+          <constraints nullable="0" />
+        </column>
+      </addColumn>
+      <addColumn tableName="ComponentType_AUD">
+        <column name="containsPlasma" type="TINYINT(1)" defaultValue="1" />
+      </addColumn>
+    </changeSet>
+</databaseChangeLog>

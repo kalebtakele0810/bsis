@@ -1,0 +1,44 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+        logicalFilePath="./liquibase/db-baseline.xml">
+
+	<!-- Updated (timler): for #293 (refactoring) -->
+	<!-- Updated (timler): for #294 (refactoring) -->
+	<!-- Updated (timler): for #328 (refactoring) -->
+    <!-- Updated (timler): for BSIS-2841 (upgrade mysql) -->
+	<changeSet id="20170320-1348" author="devang">
+	    <preConditions onFail="MARK_RAN">
+		    <not><tableExists tableName="BloodTest" /></not>
+		</preConditions>
+		<sqlFile path="./ddl_mysql.sql"/>
+	</changeSet>
+	
+	<!-- Updated (timler): for #293 (refactoring) -->
+	<!-- Updated (timler): for #294 (refactoring) -->
+	<changeSet id="20150818-1640" author="devang">
+	    <preConditions onFail="MARK_RAN">
+		    <sqlCheck expectedResult="0"> 
+				<![CDATA[
+				SELECT count(*) FROM FormField where form = 'Donor' and field = 'donorNumber';
+				]]>
+			</sqlCheck>
+		</preConditions>
+		<sqlFile path="./initial_data.sql"/>
+	</changeSet>
+	
+    <!-- Updated (timler): for #293 (refactoring) -->
+	<!-- Updated (lauravignoli): for BSIS-2305 (refactoring) -->
+	<changeSet id="20161214-1535" author="lauravignoli">
+	    <preConditions onFail="MARK_RAN">
+		    <sqlCheck expectedResult="1"> 
+				<![CDATA[
+				SELECT count(*) = 0 FROM BloodTest;
+				]]>
+			</sqlCheck>
+		</preConditions>
+		<sqlFile path="./blood_tests.sql"/>
+	</changeSet>
+
+</databaseChangeLog>
