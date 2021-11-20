@@ -13,6 +13,7 @@ public class PostDonationCounsellingSummaryViewModel {
 	private Date counsellingDate;
 	private String donorNumber;
 	private String firstName;
+	private String middleName;
 	private String lastName;
 	private Gender gender;
 	private Date birthDate;
@@ -69,6 +70,14 @@ public class PostDonationCounsellingSummaryViewModel {
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+
+	public String getMiddleName() {
+		return middleName;
+	}
+
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
 	}
 
 	public String getLastName() {

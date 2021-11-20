@@ -102,6 +102,7 @@ public class PostDonationCounsellingFactory {
     viewModel.setCounsellingDate(postDonationCounselling.getCounsellingDate());
     viewModel.setDonorNumber(donor.getDonorNumber());
     viewModel.setFirstName(donor.getFirstName());
+    viewModel.setMiddleName(donor.getMiddleName());
     viewModel.setLastName(donor.getLastName());
     viewModel.setGender(donor.getGender());
     viewModel.setBirthDate(donor.getBirthDate());

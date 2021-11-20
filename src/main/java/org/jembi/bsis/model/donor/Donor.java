@@ -210,6 +210,7 @@ public class Donor extends BaseModificationTrackerUUIDEntity {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private PreferredLanguage preferredLanguage;
 
+
 	private Date dueToDonate;
 
 	public Donor() {
@@ -493,4 +494,6 @@ public class Donor extends BaseModificationTrackerUUIDEntity {
 	public void setDueToDonate(Date dueToDonate) {
 		this.dueToDonate = dueToDonate;
 	}
+
+
 }

@@ -145,4 +145,5 @@
   <include file="liquibase/updates/3605-enable-test-batch-back-entry.xml"/>
   <include file="liquibase/updates/3706-add-not-null-contraint-to-donation-pack-type.xml"/>
   <include file="liquibase/updates/2573-add-not-null-contraint-to-location-types.xml"/>
+  
 </databaseChangeLog>
