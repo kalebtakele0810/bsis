@@ -18,124 +18,145 @@ import org.springframework.stereotype.Service;
 @Service
 public class TemplateObjectFactory {
 
-  @Autowired
-  private GeneralConfigAccessorService generalConfigAccessorService;
+	@Autowired
+	private GeneralConfigAccessorService generalConfigAccessorService;
 
-  @Autowired
-  private ComponentVolumeService componentVolumeService;
+	@Autowired
+	private ComponentVolumeService componentVolumeService;
 
-  @Autowired
-  private CheckCharacterService checkCharacterService;
+	@Autowired
+	private CheckCharacterService checkCharacterService;
 
-  public PackLabelTemplateObject createPackLabelTemplateObject(Component component) {
-    PackLabelTemplateObject template = new PackLabelTemplateObject();
+	public PackLabelTemplateObject createPackLabelTemplateObject(Component component) {
+		PackLabelTemplateObject template = new PackLabelTemplateObject();
 
-    String dateFormatString = generalConfigAccessorService.getGeneralConfigValueByName("dateFormat");
-    String dateTimeFormatString = generalConfigAccessorService.getGeneralConfigValueByName("dateTimeFormat");
+		String dateFormatString = generalConfigAccessorService.getGeneralConfigValueByName("dateFormat");
+		String dateTimeFormatString = generalConfigAccessorService.getGeneralConfigValueByName("dateTimeFormat");
 
-    DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
-    DateFormat dateTimeFormat = new SimpleDateFormat(dateTimeFormatString);
-    DateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    
-    updatePackLabelTemplateObjectWithConfigInfo(template);
-    updatePackLabelTemplateObjectWithComponentInfo(template, component, dateTimeFormat, isoDateFormat);
-    updatePackLabelTemplateObjectWithDonationInfo(template, component, dateFormat, isoDateFormat);
-    updatePackLabelTemplateObjectWithComponentTypeInfo(template, component.getComponentType());
-    updatePackLabelTemplateObjectWithDINPositioningInfo(template,
-        component.getDonation().getDonationIdentificationNumber().length());
-    return template;
-  }
+		DateFormat dateFormat = new SimpleDateFormat(dateFormatString);
+		DateFormat dateTimeFormat = new SimpleDateFormat(dateTimeFormatString);
+		DateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-  private void updatePackLabelTemplateObjectWithConfigInfo(PackLabelTemplateObject template) {
-    String serviceInfoLine1 =
-        generalConfigAccessorService.getGeneralConfigValueByName(GeneralConfigConstants.SERVICE_INFO_LINE_1);
-    String serviceInfoLine2 =
-        generalConfigAccessorService.getGeneralConfigValueByName(GeneralConfigConstants.SERVICE_INFO_LINE_2);
+		updatePackLabelTemplateObjectWithConfigInfo(template);
+		updatePackLabelTemplateObjectWithComponentInfo(template, component, dateTimeFormat, isoDateFormat);
+		updatePackLabelTemplateObjectWithDonationInfo(template, component, dateFormat, isoDateFormat);
+		updatePackLabelTemplateObjectWithComponentTypeInfo(template, component.getComponentType());
+		updatePackLabelTemplateObjectWithDINPositioningInfo(template,
+				component.getDonation().getDonationIdentificationNumber().length());
+		return template;
+	}
 
-    template.config.serviceInfoLine1 = serviceInfoLine1;
-    template.config.serviceInfoLine2 = serviceInfoLine2;
-  }
+	private void updatePackLabelTemplateObjectWithConfigInfo(PackLabelTemplateObject template) {
+		String serviceInfoLine1 = generalConfigAccessorService
+				.getGeneralConfigValueByName(GeneralConfigConstants.SERVICE_INFO_LINE_1);
+		String serviceInfoLine2 = generalConfigAccessorService
+				.getGeneralConfigValueByName(GeneralConfigConstants.SERVICE_INFO_LINE_2);
 
-  private void updatePackLabelTemplateObjectWithDINPositioningInfo(PackLabelTemplateObject template, int DINLength) {
-    final int dinCharWidth = 12; // // = 10+2 : 10 for font width, and 2 for ICG (inter character gap).
-    final int startFlagCharsPos = 75;
-    int flagCharPos = startFlagCharsPos + ((DINLength - 1) * dinCharWidth);
-    int boxPos = flagCharPos + 30;
+		template.config.serviceInfoLine1 = serviceInfoLine1;
+		template.config.serviceInfoLine2 = serviceInfoLine2;
+	}
 
-    template.DINPositioning.flagCharPos = flagCharPos;
-    template.DINPositioning.boxPos = boxPos;
-    template.DINPositioning.checkCharPos = boxPos + 9;
-  }
+	private void updatePackLabelTemplateObjectWithDINPositioningInfo(PackLabelTemplateObject template, int DINLength) {
+		final int dinCharWidth = 12; // // = 10+2 : 10 for font width, and 2 for ICG (inter character gap).
+		final int startFlagCharsPos = 75;
+		int flagCharPos = startFlagCharsPos + ((DINLength - 1) * dinCharWidth);
+		int boxPos = flagCharPos + 30;
 
-  private void updatePackLabelTemplateObjectWithComponentInfo(PackLabelTemplateObject template, Component component,
-      DateFormat dateTimeFormat, DateFormat isoDateFormat) {
-    template.component.componentCode = component.getComponentCode();
-    template.component.expiresOn = dateTimeFormat.format(component.getExpiresOn());
-    template.component.expiresOnISO = isoDateFormat.format(component.getExpiresOn());
-    template.component.volume = componentVolumeService.calculateVolume(component);
-    template.component.weight = component.getWeight();
-  }
+		template.DINPositioning.flagCharPos = flagCharPos;
+		template.DINPositioning.boxPos = boxPos;
+		template.DINPositioning.checkCharPos = boxPos + 9;
+	}
 
-  private void updatePackLabelTemplateObjectWithDonationInfo(PackLabelTemplateObject template, Component component,
-      DateFormat dateFormat, DateFormat isoDateFormat) {
-    Donation donation = component.getDonation();
+	private void updatePackLabelTemplateObjectWithComponentInfo(PackLabelTemplateObject template, Component component,
+			DateFormat dateTimeFormat, DateFormat isoDateFormat) {
+		template.component.componentCode = component.getComponentCode();
+		template.component.expiresOn = dateTimeFormat.format(component.getExpiresOn());
+		template.component.expiresOnISO = isoDateFormat.format(component.getExpiresOn());
+		template.component.volume = componentVolumeService.calculateVolume(component);
+		// modified by kaleb
+		if (component.getWeight() != null) {
+			// Whole blood CPDA
+			if (component.getComponentCode().equalsIgnoreCase("1001")) {
+				template.component.weight = (int) ((component.getWeight() - 90) / 1.053);
+			}
+			// CRC-Packed Red Cells-SAGM
+			if (component.getComponentCode().equalsIgnoreCase("2011")) {
+				template.component.weight = (int) ((component.getWeight() - 49) / 1.06);
+			}
+			// Fresh frozen plazma or Cryoprecipitate
+			if (component.getComponentCode().equalsIgnoreCase("3001")
+					|| component.getComponentCode().equalsIgnoreCase("5001")) {
+				template.component.weight = (int) ((component.getWeight() - 28) / 1.026);
+			}
+			// Fresh frozen plazma or Cryoprecipitate
+			if (component.getComponentCode().equalsIgnoreCase("4001")) {
+				template.component.weight = (int) ((component.getWeight() - 28) / 1.058);
+			}
 
-    template.donation.DIN = donation.getDonationIdentificationNumber();
-    template.donation.flagCharacters = donation.getFlagCharacters();
-    template.donation.checkCharacter = checkCharacterService.calculateCheckCharacter(donation.getFlagCharacters());
-    template.donation.bloodABO = donation.getBloodAbo();
-    template.donation.bloodRh = donation.getBloodRh();
-    template.donation.isBloodRhPositive = donation.getBloodRh().contains("+");
-    template.donation.isBloodRhNegative = donation.getBloodRh().contains("-");
-    template.donation.isBloodHighTitre = shouldLabelIncludeHighTitre(component);
-    template.donation.donationDate = dateFormat.format(donation.getDonationDate());
-    template.donation.donationDateISO = isoDateFormat.format(donation.getDonationDate());
-  }
+		}
+	}
 
-  /**
-   * The label should include "HIGH TITRE" if:
-   * 
-   * 1- The donation's titre is high 2- The donation's blood ABO is "O" 3- The component's type
-   * contains plasma
-   *
-   * @param component the component
-   * @return true, if successful
-   */
-  protected boolean shouldLabelIncludeHighTitre(Component component) {
-    Donation donation = component.getDonation();
-    if (donation.getTitre() != null && donation.getTitre().equals(Titre.HIGH)
-        && donation.getBloodAbo().equals(BloodAbo.O.name()) && component.getComponentType().getContainsPlasma()) {
-      return true;
-    }
-    return false;
-  }
+	private void updatePackLabelTemplateObjectWithDonationInfo(PackLabelTemplateObject template, Component component,
+			DateFormat dateFormat, DateFormat isoDateFormat) {
+		Donation donation = component.getDonation();
 
-  private void updatePackLabelTemplateObjectWithComponentTypeInfo(PackLabelTemplateObject template,
-      ComponentType componentType) {
-    template.componentType.componentTypeName = componentType.getComponentTypeName();
-    template.componentType.preparationInfo = componentType.getPreparationInfo();
-    template.componentType.storageInfo = componentType.getStorageInfo();
-    template.componentType.transportInfo = componentType.getTransportInfo();
-  }
+		template.donation.DIN = donation.getDonationIdentificationNumber();
+		template.donation.flagCharacters = donation.getFlagCharacters();
+		template.donation.checkCharacter = checkCharacterService.calculateCheckCharacter(donation.getFlagCharacters());
+		template.donation.bloodABO = donation.getBloodAbo();
+		template.donation.bloodRh = donation.getBloodRh();
+		template.donation.isBloodRhPositive = donation.getBloodRh().contains("+");
+		template.donation.isBloodRhNegative = donation.getBloodRh().contains("-");
+		template.donation.isBloodHighTitre = shouldLabelIncludeHighTitre(component);
+		template.donation.donationDate = dateFormat.format(donation.getDonationDate());
+		template.donation.donationDateISO = isoDateFormat.format(donation.getDonationDate());
+	}
 
-  public DiscardLabelTemplateObject createDiscardLabelTemplateObject(Component component) {
-    DiscardLabelTemplateObject template = new DiscardLabelTemplateObject();
+	/**
+	 * The label should include "HIGH TITRE" if:
+	 * 
+	 * 1- The donation's titre is high 2- The donation's blood ABO is "O" 3- The
+	 * component's type contains plasma
+	 *
+	 * @param component the component
+	 * @return true, if successful
+	 */
+	protected boolean shouldLabelIncludeHighTitre(Component component) {
+		Donation donation = component.getDonation();
+		if (donation.getTitre() != null && donation.getTitre().equals(Titre.HIGH)
+				&& donation.getBloodAbo().equals(BloodAbo.O.name())
+				&& component.getComponentType().getContainsPlasma()) {
+			return true;
+		}
+		return false;
+	}
 
-    template.component.componentCode = component.getComponentCode();
-    template.componentType.componentTypeCode = component.getComponentType().getComponentTypeCode();
-    template.donation.DIN = component.getDonationIdentificationNumber();
+	private void updatePackLabelTemplateObjectWithComponentTypeInfo(PackLabelTemplateObject template,
+			ComponentType componentType) {
+		template.componentType.componentTypeName = componentType.getComponentTypeName();
+		template.componentType.preparationInfo = componentType.getPreparationInfo();
+		template.componentType.storageInfo = componentType.getStorageInfo();
+		template.componentType.transportInfo = componentType.getTransportInfo();
+	}
 
-    updateDiscardLabelTemplateObjectWithConfigInfo(template);
+	public DiscardLabelTemplateObject createDiscardLabelTemplateObject(Component component) {
+		DiscardLabelTemplateObject template = new DiscardLabelTemplateObject();
 
-    return template;
-  }
+		template.component.componentCode = component.getComponentCode();
+		template.componentType.componentTypeCode = component.getComponentType().getComponentTypeCode();
+		template.donation.DIN = component.getDonationIdentificationNumber();
 
-  private void updateDiscardLabelTemplateObjectWithConfigInfo(DiscardLabelTemplateObject template) {
-    String serviceInfoLine1 = generalConfigAccessorService.getGeneralConfigValueByName(
-        GeneralConfigConstants.SERVICE_INFO_LINE_1);
-    String serviceInfoLine2 = generalConfigAccessorService.getGeneralConfigValueByName(
-        GeneralConfigConstants.SERVICE_INFO_LINE_2);
-    template.config.serviceInfoLine1 = serviceInfoLine1;
-    template.config.serviceInfoLine2 = serviceInfoLine2;
-  }
+		updateDiscardLabelTemplateObjectWithConfigInfo(template);
+
+		return template;
+	}
+
+	private void updateDiscardLabelTemplateObjectWithConfigInfo(DiscardLabelTemplateObject template) {
+		String serviceInfoLine1 = generalConfigAccessorService
+				.getGeneralConfigValueByName(GeneralConfigConstants.SERVICE_INFO_LINE_1);
+		String serviceInfoLine2 = generalConfigAccessorService
+				.getGeneralConfigValueByName(GeneralConfigConstants.SERVICE_INFO_LINE_2);
+		template.config.serviceInfoLine1 = serviceInfoLine1;
+		template.config.serviceInfoLine2 = serviceInfoLine2;
+	}
 }

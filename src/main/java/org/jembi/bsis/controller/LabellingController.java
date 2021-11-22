@@ -1,6 +1,7 @@
 package org.jembi.bsis.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,69 +26,86 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("labels")
 public class LabellingController {
 
-  @Autowired
-  private LabellingControllerService labellingControllerService;
-  
-  @RequestMapping(value = "/components/form", method = RequestMethod.GET)
-  @PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
-  public Map<String, Object> findComponentFormGenerator() {
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("componentTypes", labellingControllerService.getComponentTypes());
-    map.put("locations", labellingControllerService.getLocations());
-    return map;
-  }
+	@Autowired
+	private LabellingControllerService labellingControllerService;
 
-  @RequestMapping(value = "/donations/{din}/components", method = RequestMethod.GET)
-  @PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
-  public ResponseEntity<Map<String, Object>> findlotRelease(@PathVariable String din,
-      @RequestParam(required = true, value = "componentType") UUID componentTypeId) {
-    Map<String, Object> componentMap = new HashMap<String, Object>();
-    componentMap.put("donationNumber", din);
-    componentMap.put("components", labellingControllerService.getComponentsForLabelling(din, componentTypeId));
-    return new ResponseEntity<>(componentMap, HttpStatus.OK);
-  }
-  
-  @RequestMapping(value = "/components", method = RequestMethod.GET)
-  @PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
-  public Map<String, Object> findSafeComponents(@RequestParam(required = false) String donationIdentificationNumber, 
-      @RequestParam(required = false) String componentCode, 
-      @RequestParam(required = false) UUID componentTypeId, 
-      @RequestParam(required = false) UUID locationId,
-      @RequestParam(required = false) List<String> bloodGroups, 
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate, 
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate, 
-      @RequestParam(required = false) InventoryStatus inventoryStatus) {
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("components", labellingControllerService.findSafeComponentsToLabel(donationIdentificationNumber, componentCode, componentTypeId, locationId,
-        bloodGroups, startDate, endDate, inventoryStatus));
-    return map;
-  }
+	@RequestMapping(value = "/components/form", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
+	public Map<String, Object> findComponentFormGenerator() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("componentTypes", labellingControllerService.getComponentTypes());
+		map.put("locations", labellingControllerService.getLocations());
+		return map;
+	}
 
-  @RequestMapping(value = "/print/packlabel/{componentId}", method = RequestMethod.GET)
-  @PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
-  public ResponseEntity<Map<String, Object>> printLabel(@PathVariable UUID componentId) throws IOException {
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("labelZPL", labellingControllerService.printPackLabel(componentId));
-    return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
-  }
+	@RequestMapping(value = "/donations/{din}/components", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
+	public ResponseEntity<Map<String, Object>> findlotRelease(@PathVariable String din,
+			@RequestParam(required = true, value = "componentType") UUID componentTypeId) {
+		Map<String, Object> componentMap = new HashMap<String, Object>();
+		componentMap.put("donationNumber", din);
+		componentMap.put("components", labellingControllerService.getComponentsForLabelling(din, componentTypeId));
+		return new ResponseEntity<>(componentMap, HttpStatus.OK);
+	}
 
-  @RequestMapping(value = "/verify/packlabel", method = RequestMethod.GET)
-  @PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
-  public Map<String, Object> verifyLabel(
-      @RequestParam(required = true, value = "componentId") UUID componentId,
-      @RequestParam(required = true, value = "prePrintedDIN") String prePrintedDIN,
-      @RequestParam(required = true, value = "packLabelDIN") String packLabelDIN) {
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("labelVerified", labellingControllerService.verifyPackLabel(componentId, prePrintedDIN, packLabelDIN));
-    return map;
-  }
+	@RequestMapping(value = "/components", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
+	public Map<String, Object> findSafeComponents(@RequestParam(required = false) String donationIdentificationNumber,
+			@RequestParam(required = false) String componentCode, @RequestParam(required = false) UUID componentTypeId,
+			@RequestParam(required = false) UUID locationId, @RequestParam(required = false) List<String> bloodGroups,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date startDate,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endDate,
+			@RequestParam(required = false) InventoryStatus inventoryStatus) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("components", labellingControllerService.findSafeComponentsToLabel(donationIdentificationNumber,
+				componentCode, componentTypeId, locationId, bloodGroups, startDate, endDate, inventoryStatus));
+		return map;
+	}
 
-  @RequestMapping(value = "/print/discardlabel/{componentId}", method = RequestMethod.GET)
-  @PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
-  public ResponseEntity<Map<String, Object>> printDiscard(@PathVariable UUID componentId) throws IOException {
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("labelZPL", labellingControllerService.printDiscardLabel(componentId));
-    return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
-  }
+	@RequestMapping(value = "/print/packlabel/{componentId}", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
+	public ResponseEntity<Map<String, Object>> printLabel(@PathVariable UUID componentId) throws IOException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("labelZPL", labellingControllerService.printPackLabel(componentId));
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/verify/packlabel", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
+	public Map<String, Object> verifyLabel(@RequestParam(required = true, value = "componentId") UUID componentId,
+			@RequestParam(required = true, value = "prePrintedDIN") String prePrintedDIN,
+			@RequestParam(required = true, value = "packLabelDIN") String packLabelDIN) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("labelVerified", labellingControllerService.verifyPackLabel(componentId, prePrintedDIN, packLabelDIN));
+		return map;
+	}
+
+	@RequestMapping(value = "/print/discardlabel/{componentId}", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
+	public ResponseEntity<Map<String, Object>> printDiscard(@PathVariable UUID componentId) throws IOException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("labelZPL", labellingControllerService.printDiscardLabel(componentId));
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+	}
+
+	// Added by Kaleb
+	//Able to print by a normal printer
+
+	@RequestMapping(value = "/print/multiplepacklabels", method = RequestMethod.GET)
+	@PreAuthorize("hasRole('" + PermissionConstants.LABEL_COMPONENT + "')")
+	public ResponseEntity<Map<String, Object>> printMultipleLabel(
+			@RequestParam(required = true, value = "componentId1") UUID componentId1,
+			@RequestParam(required = true, value = "componentId2") UUID componentId2,
+			@RequestParam(required = true, value = "componentId3") UUID componentId3,
+			@RequestParam(required = true, value = "componentId4") UUID componentId4) throws IOException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		ArrayList<String> respoonseArray=new ArrayList<String>();
+		respoonseArray.add( labellingControllerService.printPackLabel(componentId1));
+		respoonseArray.add( labellingControllerService.printPackLabel(componentId2));
+		respoonseArray.add( labellingControllerService.printPackLabel(componentId3));
+		respoonseArray.add( labellingControllerService.printPackLabel(componentId4));
+		map.put("labelZPL", respoonseArray);
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+	}
 
 }
